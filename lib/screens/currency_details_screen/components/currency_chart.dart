@@ -15,10 +15,6 @@ class CurrencyChart extends StatelessWidget {
 
   double getInterval(double minPrice, double maxPrice) {
     final split = (maxPrice - minPrice) / 5;
-    print(minPrice);
-        print(maxPrice);
-        print(priceHistory);
-
     final List<double> intervals = [0.005, 0.01, 0.1, 1, 10, 20, 50, 100, 200];
     for (final interval in intervals) {
       if (split < interval) {
@@ -40,14 +36,8 @@ class CurrencyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     double maxPrice = 0;
-  double minPrice = 0;
-    priceHistory.forEach((price) => {
-      print(price),
-
-        if (price > maxPrice) {maxPrice = price},
-        if (price < minPrice) {minPrice = price},
-      });
+    final minPrice = priceHistory.reduce(math.min);
+    final maxPrice = priceHistory.reduce(math.max);
     final interval = getInterval(minPrice, maxPrice);
 
     final minPriceRounded = minPrice - (minPrice % interval);
@@ -59,9 +49,9 @@ class CurrencyChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 16),
       child: ShaderMask(
-        shaderCallback: (bounds) => const LinearGradient(
+        shaderCallback: (bounds) => LinearGradient(
           begin: Alignment.centerLeft,
-          end: Alignment(-0.7, 0),
+          end: const Alignment(-0.7, 0),
           colors: [
             kBackgroundColor,
             kBackgroundColor,
