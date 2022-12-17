@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cryptoapp/models/coin.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -7,14 +10,51 @@ import '../../utils/constants.dart';
 import 'components/currency_chart.dart';
 import 'components/trade_button.dart';
 import 'components/trade_item.dart';
+import 'package:http/http.dart' as http;
 
-class CurrencyDetailsScreen extends StatelessWidget {
-  final Currency currency;
-
+class CurrencyDetailsScreen extends StatefulWidget {
+  final Coin currency;
   const CurrencyDetailsScreen({
     Key? key,
     required this.currency,
   }) : super(key: key);
+
+  @override
+  State<CurrencyDetailsScreen> createState() => _CurrencyDetailsScreenState();
+}
+
+class _CurrencyDetailsScreenState extends State<CurrencyDetailsScreen> {
+  @override
+  void initState() {
+    fetchCoin();
+    super.initState();
+  }
+
+List<double>coinprice=[];
+  Future<void> fetchCoin() async {
+    final response = await http.get(Uri.parse(
+        'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=inr&days=7&interval=daily'));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> values;
+      values = json.decode(response.body);
+      print(values["prices"].length);
+        for (int i = 0; i < values["prices"].length; i++) {
+          if (values["prices"][i] != null) {
+            int val=values["prices"][i][0];
+            double price=val.toDouble();
+            // Map<String, dynamic> map = values[i];
+            coinprice.add(price);
+          }
+        }
+        setState(() {
+          coinprice;
+        });
+        // print(coinListprice.length);
+    } else {
+      throw Exception('Failed to load coins');
+    }
+  }
 
   Widget appBar(BuildContext context) {
     return Padding(
@@ -31,11 +71,11 @@ class CurrencyDetailsScreen extends StatelessWidget {
           const Spacer(),
           SizedBox(
             height: 32,
-            child: currency.icon,
+            child: Image.network(widget.currency.imageUrl),
           ),
           const SizedBox(width: 12),
           Text(
-            currency.name,
+            widget.currency.name,
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -61,7 +101,7 @@ class CurrencyDetailsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            currency.currentPriceString,
+            widget.currency.price.toString(),
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -70,7 +110,7 @@ class CurrencyDetailsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(6, 6, 8, 6),
             decoration: BoxDecoration(
-              color: currency.priceChange >= 0
+              color: widget.currency.price >= 0
                   ? const Color(0xFF409166)
                   : const Color(0xFFC84747),
               borderRadius: BorderRadius.circular(30),
@@ -79,13 +119,13 @@ class CurrencyDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Icon(
-                  currency.priceChange >= 0
+                  widget.currency.price >= 0
                       ? FontAwesomeIcons.caretUp
                       : FontAwesomeIcons.caretDown,
                   size: 16,
                 ),
                 const SizedBox(width: 2),
-                Text(currency.priceChangeString),
+                Text(widget.currency.price.toString()),
               ],
             ),
           ),
@@ -131,33 +171,8 @@ class CurrencyDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget tradingHistory() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Trading History',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 24),
-          for (final trade in currency.tradeHistory) ...[
-            TradeItem(
-              currencyCode: currency.code,
-              trade: trade,
-            ),
-            const SizedBox(height: 16),
-          ],
-        ],
-      ),
-    );
-  }
-
-  @override
+  // Widget tradingHistory() {
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -171,9 +186,9 @@ class CurrencyDetailsScreen extends StatelessWidget {
               const SizedBox(height: 36),
               timeFrames(),
               const SizedBox(height: 24),
-              CurrencyChart(priceHistory: currency.priceHistory),
+              CurrencyChart(priceHistory: coinprice),
               const SizedBox(height: 36),
-              if (currency.tradeHistory.isNotEmpty) tradingHistory(),
+              // if (currency.tradeHistory.isNotEmpty) tradingHistory(),
             ],
           ),
           Align(

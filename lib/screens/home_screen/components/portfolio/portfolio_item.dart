@@ -99,16 +99,16 @@ class PortfolioItem extends StatelessWidget {
               bottom: 20,
               child: currentAmount(),
             ),
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => CurrencyDetailsScreen(currency: currency),
-                  ),
-                ),
-              ),
-            ),
+            // Material(
+            //   color: Colors.transparent,
+            //   child: InkWell(
+            //     onTap: () => Navigator.of(context).push(
+            //       MaterialPageRoute(
+            //         builder: (_) => CurrencyDetailsScreen(currency: currency),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

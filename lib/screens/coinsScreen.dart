@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cryptoapp/models/coin.dart';
+import 'package:cryptoapp/screens/currency_details_screen/currency_details_screen.dart';
 import 'package:cryptoapp/screens/home_screen/components/coin_card_design.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -57,13 +58,23 @@ class _AllCoinsScreenState extends State<AllCoinsScreen> {
         itemCount: coinList.length,
         itemBuilder: (context, index) {
           return SingleChildScrollView(
-            child: CoinCardDesign(
-              name: coinList[index].name,
-              symbol: coinList[index].symbol,
-              imageUrl: coinList[index].imageUrl,
-              price: coinList[index].price.toDouble(),
-              change: coinList[index].change.toDouble(),
-              changePercentage: coinList[index].changePercentage.toDouble(),
+            child: InkWell(
+              onTap: () => {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => CurrencyDetailsScreen(
+                            currency: coinList[index],
+                          )),
+                )
+              },
+              child: CoinCardDesign(
+                name: coinList[index].name,
+                symbol: coinList[index].symbol,
+                imageUrl: coinList[index].imageUrl,
+                price: coinList[index].price.toDouble(),
+                change: coinList[index].change.toDouble(),
+                changePercentage: coinList[index].changePercentage.toDouble(),
+              ),
             ),
           );
         },

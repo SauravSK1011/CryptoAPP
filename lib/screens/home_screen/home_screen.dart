@@ -20,10 +20,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
-
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,21 +57,17 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 36),
             const BalanceCard(),
             const SizedBox(height: 36),
-            const Portfolio(),
+            // const Portfolio(),
             const SizedBox(height: 36),
-            const Favorites(),
+            // const Favorites(),
             Text("All Coins"),
             const SizedBox(height: 36),
             // const SliverToBoxAdapter(child: TittleBar()),
-FloatingActionButton(onPressed: (){
-  Navigator.of(context)
-                                            .push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AllCoinsScreen()),
-                                                );
-})
-            
+            FloatingActionButton(onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AllCoinsScreen()),
+              );
+            })
 
             //     SliverToBoxAdapter(
             //       child: SizedBox(
