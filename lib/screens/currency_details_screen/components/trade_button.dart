@@ -1,13 +1,16 @@
+import 'package:cryptoapp/models/coin.dart';
 import 'package:cryptoapp/models/trade.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TradeButton extends StatelessWidget {
   final TradeDirection tradeDirection;
+  final Coin currency;
 
-  const TradeButton({
-    Key? key,
-    required this.tradeDirection,
-  }) : super(key: key);
+  const TradeButton(
+      {Key? key, required this.tradeDirection, required this.currency})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +80,19 @@ class TradeButton extends StatelessWidget {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    String uid = auth.currentUser!.uid.toString();
+                    final docs =
+                        FirebaseFirestore.instance.collection('Transactions');
+                    final json = {
+                      'currency_name': currency.name.toString(),
+                      'currency_price': currency.price.toString(),
+                      'Time': DateTime.now(),
+                      'uid': uid
+                    };
+                    await docs.add(json);
+                  },
                 ),
               ),
             ],

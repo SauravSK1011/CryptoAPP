@@ -193,6 +193,8 @@ class _CurrencyDetailsScreenState extends State<CurrencyDetailsScreen> {
   // Widget tradingHistory() {
   @override
   Widget build(BuildContext context) {
+                      String currency_name = widget.currency.name;
+
     return done
         ? Scaffold(
             body: Stack(
@@ -337,9 +339,9 @@ class _CurrencyDetailsScreenState extends State<CurrencyDetailsScreen> {
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      TradeButton(tradeDirection: TradeDirection.sell),
-                      TradeButton(tradeDirection: TradeDirection.buy),
+                    children:  [
+                      TradeButton(tradeDirection: TradeDirection.sell,currency:widget.currency),
+                      TradeButton(tradeDirection: TradeDirection.buy,currency:widget.currency),
                     ],
                   ),
                 ),

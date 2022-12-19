@@ -35,6 +35,7 @@ class _AllCoinsScreenState extends State<AllCoinsScreen> {
         setState(() {
           coinList;
         });
+        
       }
       return coinList;
     } else {
