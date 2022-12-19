@@ -31,6 +31,7 @@ class _AllCoinsScreenState extends State<AllCoinsScreen> {
             Map<String, dynamic> map = values[i];
             coinList.add(Coin.fromJson(map));
           }
+          
         }
         setState(() {
           coinList;
